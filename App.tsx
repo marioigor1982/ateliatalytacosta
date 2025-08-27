@@ -17,7 +17,7 @@ const App: React.FC = () => {
 
   const handleScrollTo = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current) {
-      const headerOffset = 80; // Altura do header
+      const headerOffset = ref.current === homeRef.current ? 0 : 80; // Não aplica offset para a seção inicial
       const elementPosition = ref.current.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -59,9 +59,18 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-white font-bebas text-gray-800 w-full overflow-hidden">
+    <div className="min-h-screen flex flex-col">
+      <style jsx global>{`
+        html {
+          scroll-padding-top: 80px; /* Altura do header */
+        }
+        body {
+          margin: 0;
+          padding: 0;
+        }
+      `}</style>
       <Header refs={refs} onScrollTo={handleScrollTo} />
-      <main className="w-full pt-24">
+      <main className="w-full pt-0">
         <div ref={homeRef} className="w-full">
           <Hero onScrollToProducts={() => handleScrollTo(productsRef)} />
         </div>

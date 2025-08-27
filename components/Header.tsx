@@ -63,10 +63,36 @@ const Header: React.FC<HeaderProps> = ({ refs, onScrollTo }) => {
     onScrollTo(ref);
   };
 
+  // Add fonts to document head
+  useEffect(() => {
+    const preconnect1 = document.createElement('link');
+    preconnect1.rel = 'preconnect';
+    preconnect1.href = 'https://fonts.googleapis.com';
+    
+    const preconnect2 = document.createElement('link');
+    preconnect2.rel = 'preconnect';
+    preconnect2.href = 'https://fonts.gstatic.com';
+    preconnect2.crossOrigin = 'anonymous';
+    
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Agbalumo&family=Bebas+Neue&family=Dancing+Script:wght@400..700&family=Satisfy&display=swap';
+    fontLink.rel = 'stylesheet';
+    
+    document.head.append(preconnect1, preconnect2, fontLink);
+    
+    return () => {
+      [preconnect1, preconnect2, fontLink].forEach(el => el.remove());
+    };
+  }, []);
+
   return (
-    <header className={`fixed w-full z-50 shadow-lg transition-all duration-300 ${
-      isScrolled ? 'py-1' : 'py-3'
-    } bg-gradient-to-r from-[#D9B36C] via-[#A6783F] to-[#8C5626] text-white`}>
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-[#8C5626]/90 backdrop-blur-sm shadow-lg py-2' 
+            : 'bg-gradient-to-r from-[#8C5626] to-[#A6783F] py-4'
+        }`}
+      >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -75,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ refs, onScrollTo }) => {
               alt="Talyta Costa Logo" 
               className={`${isScrolled ? 'h-10 w-10' : 'h-12 w-12'} transition-all duration-300 mr-3 rounded-full object-cover border-2 border-[#F2E8B3]`} 
             />
-            <span className="font-agbalumo text-2xl sm:text-3xl">Talyta Costa</span>
+            <span className="font-satisfy text-2xl sm:text-3xl text-white">Talyta Costa</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -85,10 +111,10 @@ const Header: React.FC<HeaderProps> = ({ refs, onScrollTo }) => {
                 <li key={item.id}>
                   <button
                     onClick={() => handleNavClick(item.ref)}
-                    className={`px-4 py-2 rounded-full text-base font-bebas tracking-wider transition-colors duration-200 ${
+                    className={`px-4 py-2 rounded-full text-base font-bebas tracking-wider transition-all duration-200 ${
                       activeSection === item.id 
-                        ? 'bg-[#8C5626] text-white shadow-md' 
-                        : 'text-white hover:bg-[#8C5626]/80'
+                        ? 'bg-[#F2E8B3] text-[#8C5626] shadow-lg' 
+                        : 'text-white hover:bg-[#F2E8B3] hover:text-[#8C5626] hover:shadow-md'
                     }`}
                   >
                     {item.label}
@@ -102,8 +128,9 @@ const Header: React.FC<HeaderProps> = ({ refs, onScrollTo }) => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-[#8C5626] focus:outline-none"
-              aria-expanded="false"
+              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-[#F2E8B3] hover:text-[#8C5626] focus:outline-none transition-all duration-200"
+              aria-expanded={isMenuOpen}
+              aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
             >
               <span className="sr-only">Abrir menu</span>
               {!isMenuOpen ? (
@@ -120,17 +147,21 @@ const Header: React.FC<HeaderProps> = ({ refs, onScrollTo }) => {
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && (
+        <div 
+          className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+            isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          } ${isScrolled ? 'bg-white/90 backdrop-blur-sm' : 'bg-[#8C5626]'}`}
+        >
           <nav className="md:hidden mt-4 pb-4">
             <ul className="flex flex-col space-y-3">
               {navItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => handleNavClick(item.ref)}
-                    className={`w-full text-left px-6 py-3 rounded-full text-lg font-bebas tracking-wider transition-colors duration-200 ${
+                    className={`w-full text-left px-6 py-3 rounded-full text-lg font-bebas tracking-wider transition-all duration-200 ${
                       activeSection === item.id 
-                        ? 'bg-[#8C5626] text-white shadow-md' 
-                        : 'text-white hover:bg-[#8C5626]/80'
+                        ? 'bg-[#F2E8B3] text-[#8C5626] shadow-lg' 
+                        : 'text-white hover:bg-[#F2E8B3] hover:text-[#8C5626] hover:shadow-md'
                     }`}
                   >
                     {item.label}
@@ -139,7 +170,7 @@ const Header: React.FC<HeaderProps> = ({ refs, onScrollTo }) => {
               ))}
             </ul>
           </nav>
-        )}
+        </div>
       </div>
     </header>
   );

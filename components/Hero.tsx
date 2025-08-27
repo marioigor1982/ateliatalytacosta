@@ -64,7 +64,7 @@ const Hero: React.FC<HeroProps> = ({ onScrollToProducts }) => {
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center text-white relative px-4 py-20 md:py-0 overflow-hidden">
+    <section className="min-h-screen flex items-center justify-center text-white relative px-4 overflow-hidden pt-0">
       <div className="absolute inset-0 w-full h-full">
         {images.map((image, index) => (
           <div 
