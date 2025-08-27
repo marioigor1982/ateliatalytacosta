@@ -16,14 +16,18 @@ export default defineConfig(({ mode }) => {
     base: '/',
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(__dirname, './src'),
       }
     },
     server: {
       port: 3000,
-      open: true
+      open: true,
+      fs: {
+        strict: false
+      }
     },
     publicDir: 'public',
+    assetsInclude: ['**/*.css'],
     build: {
       outDir: 'dist',
       assetsDir: 'assets',

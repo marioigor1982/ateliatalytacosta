@@ -16,7 +16,16 @@ const App: React.FC = () => {
   const refs = { home: homeRef, about: aboutRef, products: productsRef, contact: contactRef };
 
   const handleScrollTo = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (ref.current) {
+      const headerOffset = 80; // Altura do header
+      const elementPosition = ref.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   // Efeito para atualizar o favicon
@@ -50,19 +59,19 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-white font-bebas text-gray-800">
+    <div className="bg-white font-bebas text-gray-800 w-full overflow-hidden">
       <Header refs={refs} onScrollTo={handleScrollTo} />
-      <main>
-        <div ref={homeRef}>
+      <main className="w-full pt-24">
+        <div ref={homeRef} className="w-full">
           <Hero onScrollToProducts={() => handleScrollTo(productsRef)} />
         </div>
-        <div ref={aboutRef}>
+        <div ref={aboutRef} className="w-full">
           <About />
         </div>
-        <div ref={productsRef}>
+        <div ref={productsRef} className="w-full">
           <Products />
         </div>
-        <div ref={contactRef}>
+        <div ref={contactRef} className="w-full">
           <CallToAction />
         </div>
       </main>
