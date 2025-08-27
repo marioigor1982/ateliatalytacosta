@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import '../styles/carousel.css';
 import { PRODUCTS } from '../constants';
 import type { Product } from '../types';
 
@@ -38,10 +42,46 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
 
 const Products: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const sliderRef = useRef<Slider>(null);
   
   const filteredProducts = activeCategory === 'all' 
     ? PRODUCTS 
     : PRODUCTS.filter(product => product.category === activeCategory);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: Math.min(4, filteredProducts.length),
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: Math.min(3, filteredProducts.length),
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: Math.min(2, filteredProducts.length),
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
 
   return (
     <section id="produtos" className="py-12 sm:py-16 lg:py-20 bg-[#F9F9F9]">
@@ -69,10 +109,36 @@ const Products: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="relative px-8">
+          <button 
+            onClick={() => sliderRef.current?.slickPrev()}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-[#8C5626] w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-all duration-300 hover:scale-110"
+            aria-label="Anterior"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <div className="px-8">
+            <Slider ref={sliderRef} {...settings}>
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="px-2">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </Slider>
+          </div>
+          
+          <button 
+            onClick={() => sliderRef.current?.slickNext()}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-[#8C5626] w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-all duration-300 hover:scale-110"
+            aria-label="Próximo"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
 
         {filteredProducts.length === 0 && (
