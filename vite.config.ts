@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     publicDir: 'public',
-    assetsInclude: ['**/*.css'],
+    assetsInclude: ['**/*.css', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.svg', '**/*.mp4', '**/*.webp'],
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
@@ -35,7 +35,14 @@ export default defineConfig(({ mode }) => {
       assetsInlineLimit: 4096, // 4kb
       rollupOptions: {
         output: {
-          assetFileNames: 'assets/[name].[hash][extname]',
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split('.');
+            const ext = info[info.length - 1];
+            if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'mp4'].includes(ext)) {
+              return `img/[name]-[hash][extname]`;
+            }
+            return 'assets/[name]-[hash][extname]';
+          },
           chunkFileNames: 'assets/[name].[hash].js',
           entryFileNames: 'assets/[name].[hash].js',
         }

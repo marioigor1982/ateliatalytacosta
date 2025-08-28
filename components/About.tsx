@@ -11,9 +11,10 @@ const About: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-1/2">
             <img 
-              src="/img/MKT_2.jpg" 
+              src="/MKT_2.jpg" 
               alt="Ateliê Talyta Costa" 
               className="rounded-lg shadow-2xl w-full h-auto object-cover"
+              loading="lazy"
             />
           </div>
           <div className="md:w-1/2 text-lg text-gray-700 leading-relaxed font-sans">
