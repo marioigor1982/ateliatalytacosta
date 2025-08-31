@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PRODUCTS } from '../constants';
 import type { Product } from '../types';
 
@@ -36,12 +36,42 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
   </div>
 );
 
+// List of product images for the carousel
+const carouselImages = [
+  { src: '/img/Produto8.jpg', alt: 'Produto 8' },
+  { src: '/img/Header_3.jpg', alt: 'Cabeçalho 3' },
+  { src: '/img/Produto32.jpg', alt: 'Produto 32' },
+  { src: '/img/Produto19.jpg', alt: 'Produto 19' },
+  { src: '/img/Header_5.jpg', alt: 'Cabeçalho 5' }
+];
+
 const Products: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   
   const filteredProducts = activeCategory === 'all' 
     ? PRODUCTS 
     : PRODUCTS.filter(product => product.category === activeCategory);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    if (isPaused) return;
+    
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % (carouselImages.length - 3));
+    }, 3000);
+    
+    return () => clearInterval(timer);
+  }, [isPaused]);
+  
+  const nextSlide = () => {
+    setCurrentSlide((prev) => Math.min(prev + 1, carouselImages.length - 4));
+  };
+  
+  const prevSlide = () => {
+    setCurrentSlide((prev) => Math.max(prev - 1, 0));
+  };
 
   return (
     <section id="produtos" className="py-12 sm:py-16 lg:py-20 bg-[#F9F9F9]">
@@ -69,17 +99,60 @@ const Products: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="relative overflow-hidden mt-10">
+          <div className="relative w-full">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                transform: `translateX(-${currentSlide * 25}%)`,
+                width: `${carouselImages.length * 25}%`
+              }}
+            >
+              {carouselImages.map((image, index) => (
+                <div 
+                  key={index}
+                  className="w-1/5 px-2 flex-shrink-0"
+                >
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 h-full">
+                    <div className="w-full h-96 overflow-hidden">
+                      <img 
+                        src={image.src} 
+                        alt={image.alt}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Navigation Arrows */}
+            <button 
+              onClick={prevSlide}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 text-[#8C5626] p-2 rounded-full shadow-md hover:bg-white transition-all z-10"
+              aria-label="Previous slide"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button 
+              onClick={nextSlide}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 text-[#8C5626] p-2 rounded-full shadow-md hover:bg-white transition-all z-10"
+              aria-label="Next slide"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">Nenhum produto encontrado nesta categoria.</p>
-          </div>
-        )}
       </div>
     </section>
   );

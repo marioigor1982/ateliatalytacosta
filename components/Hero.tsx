@@ -4,83 +4,22 @@ interface HeroProps {
   onScrollToProducts: () => void;
 }
 
-// Importar imagens corretamente
-const images = [
-  '/Produto1.jpg',
-  '/Produto2.jpg',
-  '/Produto4.jpg',
-  '/Produto5.jpg',
-  '/Produto8.jpg',
-  '/Produto10.jpg',
-  '/Produto11.jpg',
-  '/Produto16.jpg',
-  '/Produto17.jpg',
-  '/Produto18.jpg',
-  '/Produto19.jpg',
-  '/Produto20.jpg',
-  '/Produto21.jpg',
-  '/Produto22.jpg',
-  '/Produto23.jpg',
-  '/Produto24.jpg',
-  '/Produto25.jpg',
-  '/Produto26.jpg',
-  '/Produto27.jpg',
-  '/Produto28.jpg',
-  '/Produto29.jpg',
-  '/Produto30.jpg',
-  '/Produto31.jpg',
-  '/Produto32.jpg',
-  '/Produto33.jpg',
-  '/Produto34.jpg',
-  '/Produto35.jpg',
-  '/Produto36.jpg',
-  '/Produto37.jpg',
-  '/Produto38.jpg',
-  '/Produto39.jpg',
-  '/Produto40.jpg',
-  '/Produto42.jpg',
-  '/Produto43.jpg',
-  '/Produto44.jpg',
-  '/Produto45.jpg',
-  '/Produto46.jpg',
-  '/Produto47.jpg',
-  '/Produto48.jpg',
-  '/Produto49.jpg',
-  '/Produto50.jpg',
-  '/Produto51.jpg',
-  '/Produto52.jpg',
-  '/Produto53.jpg',
-  '/Produto54.jpg'
-];
-
 const Hero: React.FC<HeroProps> = ({ onScrollToProducts }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section className="min-h-screen flex items-center justify-center text-white relative px-4 overflow-hidden pt-0">
       <div className="absolute inset-0 w-full h-full">
-        {images.map((image, index) => (
-          <div 
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
-            style={{
-              backgroundImage: `url('${image}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        ))}
+        <div 
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: 'url(/img/Ateliê_Talyta.gif)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            width: '100%',
+            height: '100%',
+          }}
+        />
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       </div>
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>

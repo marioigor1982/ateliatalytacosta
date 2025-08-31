@@ -11,7 +11,7 @@ const About: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-1/2">
             <img 
-              src="/MKT_2.jpg" 
+              src="/img/About_us.jpg" 
               alt="Ateliê Talyta Costa" 
               className="rounded-lg shadow-2xl w-full h-auto object-cover"
               loading="lazy"
